@@ -1,0 +1,34 @@
+======================================================================
+ Subaru HDS IRAF reduction Package
+       - 1D reduction including QUick look script (hdsql)
+       - Echelle multi-order ---> 2D reduction (hdsls_ap*)
+       - Long slit 2D reduction (hdslsred)
+
+                                2021.6.18  A.Tajitsu (NAOJ)
+======================================================================
+
+ [How to use]
+   1. Please extract this archive to a proper directory.
+      or clone via github
+           git clone https://github.com/chimari/hds_iraf
+
+   2. Please add this line to your login.cl.
+        set    hdshome = '/home/taji/IRAF/hds_iraf/'
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                         your directory path
+        task   $hds.pkg = 'hdshome$hds.cl'
+        set    obsdb    = "hdshome$obsdb.dat"
+
+   3. Maybe it's better to download stsandard CAL frames including
+         - Mask
+	 - Order templates for standard setups
+	 - Wavelength references for standard setups
+      from
+         https://www.naoj.org/Observing/Instruments/HDS/wavecal.html
+      Extract calibration templates, then add this line to your login.cl .
+        set  hdscal = '/home/taji/IRAF/HDS-CAL/'
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+                         your CAL directory path
+
+
+   
