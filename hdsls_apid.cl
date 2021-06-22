@@ -5,6 +5,7 @@
 procedure hdsls_apid(inimg, outimg)
  string inimg   {prompt= "input ThAr image"}
  string outimg  {prompt= "output 2D ThAr image\n"}
+ bool   overw=yes  {prompt = 'Overwrite exsiting images? <y/n>\n'}
 
  string ref_wv1  {prompt= "Ecidentified (1D) reference spectra\n"}
  string ref_ap {prompt= "Aperture reference image"}
@@ -24,12 +25,15 @@ string inimage, outimage, wref, ref, refx
 int low, upp, stp
 int i, i_ord,j, xo, yo
 string tmp
+bool ow
 
 inimage  = inimg
 outimage = outimg
 wref     = ref_wv1
 ref      = ref_ap
 refx     = ref_ec
+
+ow=overw
 
 low = lower
 upp = upper
@@ -42,6 +46,18 @@ i_ord=int(imgets.value)
 
 for(i=1;i<=i_ord;i=i+1)
 {
+    if(access(outimage//'_a'//i//'.fits')){
+       if(ow){
+          imdelete(outimage//'_a'//i)
+       }
+       else{
+          printf("!!! Cannot overwrite %s\n",outimage//'_a'//i//'.fits')
+          printf("!!! ABORT !!!\n")
+          bye
+       }
+    }
+     
+
      apall(input=inimage,output=outimage//'_a'//i,\
       apertur=i,\
       format='multispec',reference=ref,profile=ref,nfind=2,\
@@ -82,7 +98,18 @@ for(i=1;i<=i_ord;i=i+1)
 	sort='',group='',time-,timewra=17.,\
 	override+,confirm-,assign+,verbose-,answer+)
 
-   dispcor(input=outimage//'_a'//i,output=outimage//'_ad'//i,\
+    if(access(outimage//'_ad'//i//'.fits')){
+       if(ow){
+          imdelete(outimage//'_ad'//i)
+       }
+       else{
+          printf("!!! Cannot overwrite %s\n",outimage//'_ad'//i//'.fits')
+          printf("!!! ABORT !!!\n")
+          bye
+       }
+    }
+
+    dispcor(input=outimage//'_a'//i,output=outimage//'_ad'//i,\
        	lineari+,table='',w1=INDEF,w2=INDEF,dw=INDEF,nw=INDEF,\
 	log-,flux-,blank=0.,samedis-,global-,ignorea-,confirm-,listonl-,\
 	verbose+)
