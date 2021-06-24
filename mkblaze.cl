@@ -33,12 +33,21 @@ real imin, imax, omin, omax
 string mskimg, msk_temp, msk_temp1, msk_temp2
 int msk_npix,msk_nord, msk1, msk2
 bool nomask
+int w_ha, w_hb, w_hg, w_hd, w_he, w_h28
+int npix0
 
 inimg=inimage
 outimg=outimage
 num=0;
 
 mskimg=maskimage
+
+w_ha=6563
+w_hb=4861
+w_hg=4340
+w_hd=4101
+w_he=3970
+w_h28=3889
 
 START:
 
@@ -47,10 +56,22 @@ for(i=1;i<=50;i=i+1){
 }
     
 ## Get Header Information
+
     imgets(inimg,'i_naxis2')
     nord=int(imgets.value)
     imgets(inimg,'i_naxis1')
     npix=int(imgets.value)
+    npix0=npix-1
+
+    if(access(outimg//'.fits')){
+       printf(">>>> %s already exsists. Dow you want to remove it? <y/n> : ",\
+              outimg//'.fits')
+       while(scan(ans)!=1) {}
+       if (!ans) {
+          bye
+       }
+       imdelete(outimg//'.fits')
+    }
 
     imstat(image=inimg, field='max', format-) | scan(imax)
     imstat(image=inimg, field='min', format-) | scan(imin)
@@ -64,8 +85,8 @@ for(i=1;i<=50;i=i+1){
           }
     }
 
-    printf(">>> These are current blaze functions for all orders.\n")
-    printf(">>> Do you want to make corrected blaze funtions? (y/n) : ")
+    printf("### These are current blaze functions for all orders.\n")
+    printf(">>> OK to proceed? (y/n) : ")
     while(scan(ans)!=1) {}
     if (!ans) {
        bye
@@ -119,20 +140,51 @@ for(i=1;i<=50;i=i+1){
         }
 
        tempix = mktemp('tmpix.mkblaze.')
-       listpixels(inimg//"[1,"//i//"]",wcs='world', formats="%g  %g", ver-, mode=mode, > tempix)
+       listpixels(inimg//"[1:2,"//i//"]",wcs='world', formats="%g  %g", ver-, mode=mode, > tempix)       
        list=tempix
        while(fscan(list, ptmp1, ptmp2)!=EOF){}
        w1=real(ptmp1)
        delete(tempix)
-
+      
        tempix = mktemp('tmpix.mkblaze.')
-       listpixels(inimg//"["//npix//","//i//"]",wcs='world', formats="%g  %g", ver-, mode=mode, > tempix)
+       listpixels(inimg//"["//npix-1//":"//npix//","//i//"]",wcs='world', formats="%g  %g", ver-, mode=mode, > tempix)
        list=tempix
        while(fscan(list, ptmp1, ptmp2)!=EOF){}
        w2=real(ptmp1)
        delete(tempix)
 
-	printf(">>> Order%02d : Wavelength %d - %d\n",i,int(w1),int(w2))
+	printf("=== Order%02d : Wavelength %d - %d\n",i,int(w1),int(w2))
+	if((w1 < w_ha) && (w_ha < w2)){
+	   print("#############################################################")
+	   print("###!!!!!!!!! CAUTION!  This order includes H-alpha !!!!!!!###")
+	   print("#############################################################")
+	}
+	else if((w1 < w_hb) && (w_hb < w2)){
+	   print("############################################################")
+	   print("###!!!!!!!!! CAUTION!  This order includes H-beta !!!!!!!###")
+	   print("############################################################")
+	}
+	else if((w1 < w_hg) && (w_hg < w2)){
+	   print("#############################################################")
+	   print("###!!!!!!!!! CAUTION!  This order includes H-gamma !!!!!!!###")
+	   print("#############################################################")
+	}
+	else if((w1 < w_hd) && (w_hd < w2)){
+	   print("#############################################################")
+	   print("###!!!!!!!!! CAUTION!  This order includes H-delta !!!!!!!###")
+	   print("#############################################################")
+	}
+	else if((w1 < w_he) && (w_he < w2)){
+	   print("###########################################################")
+	   print("###!!!!!!!!! CAUTION!  This order includes H 2-7 !!!!!!!###")
+	   print("###########################################################")
+	}
+	else if((w1 < w_h28) && (w_h28 < w2)){
+	   print("###########################################################")
+	   print("###!!!!!!!!! CAUTION!  This order includes H 2-8 !!!!!!!###")
+	   print("###########################################################")
+	}
+	
 	printf(">>> Do you want to use this order? (y/n) : ")
         while(scan(ans)!=1) {}
 	if(ans){
@@ -203,7 +255,12 @@ JFIN4:
                fsty[i]=1
             }
         }
-        printf(" Order%02d  :  Style=%d  %02d  %02d\n",i,fsty[i],ord1[i],ord2[i])
+	if(fsty[i]==0){
+          printf(" Order%02d  :  ===== USE =====\n",i)
+	}
+	else{
+          printf(" Order%02d  :  Style=%d  %02d  %02d\n",i,fsty[i],ord1[i],ord2[i])
+	}
    }
 
     imcopy(inimg,outimg)
@@ -315,7 +372,7 @@ JFIN4:
          }
 
          if(ford[ans_num]){
-            printf(">>> This order (%d) is now USE.\n",ans_num)
+            printf("### This order (%d) is now USE.\n",ans_num)
             printf(">>> Do you want to use this order? [y/n] : ")
             while(scan(ans)!=1) {}
             if (!ans) {
@@ -326,7 +383,7 @@ JFIN4:
             }
         } 
         else{
-           printf(">>> This order (%d) is now NOT USE.\n",ans_num)
+           printf("### This order (%d) is now NOT USE.\n",ans_num)
            printf(">>> Do you want to use this order? [y/n] : ")
            while(scan(ans)!=1) {}
            if (ans) {
@@ -497,6 +554,17 @@ JFIN4:
 #    }
 
 endofp:
+
+    printf("\n*** Plotting the modified Blaze function ***\n")
+    for(i=1;i<=nord;i=i+1){
+          if(i==1){
+    	    prow(outimg,row=i,wy1=imin,wy2=imax,app-,wcs="logical",pointmo-)
+          }
+          else{
+  	    prow(outimg,row=i,wy1=imin,wy2=imax,app+,wcs="logical",pointmo-)
+          }
+    }
+    printf("\n")
 
     printf("\n****************************************************\n")
     printf("****************************************************\n")
