@@ -14,6 +14,7 @@ apextract
 longslit
 onedspec
 utilities
+imutil
 imred
 ccdred
 noao
@@ -44,6 +45,7 @@ task	hdslstrans 	        ="hdshome$hdslstrans.cl"
 task	overscan 	        ="hdshome$overscan.cl"
 task	overscan2 	        ="hdshome$overscan2.cl"
 task	myoverscan 	        ="hdshome$myoverscan.cl"
+task	gaoes_overscan 	        ="hdshome$gaoes_overscan.cl"
 task	rvhds 	                ="hdshome$rvhds.cl"
 task	hdsql 	                ="hdshome$hdsql.cl"
 task	hdsql1 	                ="hdshome$hdsql1.cl"

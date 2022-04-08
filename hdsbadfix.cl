@@ -37,6 +37,21 @@ inimg=inimage
 outimg=outimage
 mskimg=maskimage
 
+if(access(outimg//'.fits')){
+   printf("!!! File %s already exists !!!\n", outimg//'.fits')
+   printf(">>> Do you want to remove it? <y/n> : ")
+   while(scan(ans)!=1) {}
+   if (ans) {
+      imdelete(outimg)
+   }
+   else{
+      printf("!!! Cannot overwrite %s\n",outimg//'.fits')
+      printf("!!! ABORT !!!\n")
+      bye
+   }
+}
+
+
 if((!mask) && (!manual)){
   printf("!!! Skip Processing !!!\n")
   bye
