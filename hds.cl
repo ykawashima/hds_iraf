@@ -45,7 +45,6 @@ task	hdslstrans 	        ="hdshome$hdslstrans.cl"
 task	overscan 	        ="hdshome$overscan.cl"
 task	overscan2 	        ="hdshome$overscan2.cl"
 task	myoverscan 	        ="hdshome$myoverscan.cl"
-task	gaoes_overscan 	        ="hdshome$gaoes_overscan.cl"
 task	rvhds 	                ="hdshome$rvhds.cl"
 task	hdsql 	                ="hdshome$hdsql.cl"
 task	hdsql1 	                ="hdshome$hdsql1.cl"
@@ -82,6 +81,9 @@ task	hdsis_ecf 	        ="hdshome$hdsis_ecf.cl"
 task	hdsmk1d 	        ="hdshome$hdsmk1d.cl"
 task	rvhdsmk1d 	        ="hdshome$rvhdsmk1d.cl"
 task	vcfitxy			="hdshome$vcfitxy.cl"
+
+task	gaoes_overscan 	        ="hdshome$gaoes_overscan.cl"
+task	gaoes_ecf 	        ="hdshome$gaoes_ecf.cl"
 
 beep
 print ("  ***************************************************************")
