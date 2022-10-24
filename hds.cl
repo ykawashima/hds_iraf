@@ -83,7 +83,7 @@ task	rvhdsmk1d 	        ="hdshome$rvhdsmk1d.cl"
 task	vcfitxy			="hdshome$vcfitxy.cl"
 
 task	gaoes_overscan 	        ="hdshome$gaoes_overscan.cl"
-task	gaoes_ecf 	        ="hdshome$gaoes_ecf.cl"
+task	gaoes_ecfw 	        ="hdshome$gaoes_ecfw.cl"
 
 beep
 print ("  ***************************************************************")
