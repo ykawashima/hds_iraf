@@ -20,7 +20,9 @@ string thar2d  {prompt= "2D ThAr image\n"}
 int st_x=-54  {prompt ="Start pixel to extract"}
 int ed_x=53  {prompt ="End pixel to extract\n"}
 
-bool clean=yes {prompt ="Clean up intermediate images (yes/no)\n"}
+bool ow_flat=no {prompt ="Overwrite existing sliced flat (yes/no)\n"}
+bool ow_thar=no {prompt ="Overwrite existing sliced ThAr (yes/no)\n"}
+bool clean=no {prompt ="Clean up intermediate images (yes/no)\n"}
 
 begin
 #
@@ -31,7 +33,7 @@ int i, ysize, low, upp, i_ord,  i_st
 real fmean[200]
 string file_ext, ex_flt, ex_thar, ref_c, thar_ec, ex_img
 string tempspec1, templist, img_ec, flt_ec, img_ecf, img_ecfw
-bool d_ans
+bool d_ans, flag_go
 real th_f, exptime
 #
 #
@@ -81,17 +83,28 @@ for(i=low;i<upp;i=i+1)
 
      if(access(ex_flt//file_ext//i//".fits"))
      {
+        if(ow_flat){
+	  flag_go=yes
           imdelete(ex_flt//file_ext//i)
+	}
+	else{
+	  flag_go=no
+	}
+     }
+     else{
+       flag_go=yes
      }
 
-     apall(input=ex_flt,output=ex_flt//file_ext//i,\
-      apertur="",\
-      format='echelle',reference=ref,profile="",\
-      interac-,find-,recente-,resize+,\
-      edit-,trace-,fittrac-,extract+,extras-,review-,\
-      llimit=i,ulimit=i+1,\
-      nsubaps=1, pfit='fit1d', clean-, weights='none',ylevel=INDEF)
-
+     if(flag_go){
+       apall(input=ex_flt,output=ex_flt//file_ext//i,\
+        apertur="",\
+        format='echelle',reference=ref,profile="",\
+        interac-,find-,recente-,resize+,\
+        edit-,trace-,fittrac-,extract+,extras-,review-,\
+        llimit=i,ulimit=i+1,\
+        nsubaps=1, pfit='fit1d', clean-, weights='none',ylevel=INDEF)
+     }
+     
      imgets(ex_flt//file_ext//i,'i_naxis2')
      i_ord=int(imgets.value)
 
@@ -125,18 +138,31 @@ for(i=low;i<upp;i=i+1)
      thar_ec=ex_thar//file_ext//i
      if(access(thar_ec//".fits"))
      {
+        if(ow_thar){
+	  flag_go=yes
           imdelete(thar_ec)
+	}
+	else{
+	  flag_go=no
+	}
+     }
+     else{
+       flag_go=yes
      }
 
-     apall(input=ex_thar,output=thar_ec,\
-      apertur="",\
-      format='echelle',reference=ref,profile="",\
-      interac-,find-,recente-,resize+,\
-      edit-,trace-,fittrac-,extract+,extras-,review-,\
-      llimit=i,ulimit=i+1,\
-      nsubaps=1, pfit='fit1d', clean-, weights='none',ylevel=INDEF)
-
-     printf("o")
+     if(flag_go){
+       apall(input=ex_thar,output=thar_ec,\
+        apertur="",\
+        format='echelle',reference=ref,profile="",\
+        interac-,find-,recente-,resize+,\
+        edit-,trace-,fittrac-,extract+,extras-,review-,\
+        llimit=i,ulimit=i+1,\
+        nsubaps=1, pfit='fit1d', clean-, weights='none',ylevel=INDEF)
+        printf("o")
+     }
+     else{
+        printf("s")
+     }
 }
 printf("\n\n")
 
@@ -159,11 +185,22 @@ if(low<0){
      thar_ec=ex_thar//file_ext//i
      if(access("database/ec"//thar_ec))
      {
+        if(ow_thar){
+	  flag_go=yes
           delete("database/ec"//thar_ec)
+	}
+	else{
+	  flag_go=no
+	}
+     }
+     else{
+       flag_go=yes
      }
 
-     ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
-      cradius=5.,threshold=10.,refit+,database="database")
+     if(flag_go){
+       ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
+        cradius=5.,threshold=10.,refit+,database="database")
+     }
 
      ref_c=thar_ec
   }
@@ -188,11 +225,22 @@ if(upp>0){
      thar_ec=ex_thar//file_ext//i
      if(access("database/ec"//thar_ec))
      {
+        if(ow_thar){
+	  flag_go=yes
           delete("database/ec"//thar_ec)
+	}
+	else{
+	  flag_go=no
+	}
+     }
+     else{
+       flag_go=yes
      }
 
-     ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
-      cradius=5.,threshold=10.,refit+,database="database")
+     if(flag_go){
+       ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
+        cradius=5.,threshold=10.,refit+,database="database")
+     }
 
      ref_c=thar_ec
   }
