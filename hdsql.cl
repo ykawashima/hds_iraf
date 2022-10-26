@@ -223,10 +223,10 @@ BATCH_START:
 
 if(batch){
   if(fscan(list,temp_id)==1){
-    input_id=int(temp_id)
+    input_id=temp_id
     printf("\n##########################\n")
     printf("###   Batch Mode\n")
-    printf("###     Input ID = %d\n", input_id)
+    printf("###     Input ID = %s\n", input_id)
     printf("##########################\n\n")
   }
   else{

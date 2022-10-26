@@ -84,6 +84,7 @@ task	vcfitxy			="hdshome$vcfitxy.cl"
 
 task	gaoes_overscan 	        ="hdshome$gaoes_overscan.cl"
 task	gaoes_ecfw 	        ="hdshome$gaoes_ecfw.cl"
+task	grql 	        	="hdshome$grql.cl"
 
 beep
 print ("  ***************************************************************")

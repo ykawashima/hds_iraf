@@ -20,6 +20,8 @@ string thar2d  {prompt= "2D ThAr image\n"}
 int st_x=-54  {prompt ="Start pixel to extract"}
 int ed_x=53  {prompt ="End pixel to extract\n"}
 
+bool clean=yes {prompt ="Clean up intermediate images (yes/no)\n"}
+
 begin
 #
 # variables
@@ -27,7 +29,7 @@ begin
 string inimage, outimage, flat, ref, thar, thar1
 int i, ysize, low, upp, i_ord,  i_st
 real fmean[200]
-string file_ext, ex_flt, ex_thar, ref_c, thar_in, ex_img
+string file_ext, ex_flt, ex_thar, ref_c, thar_ec, ex_img
 string tempspec1, templist, img_ec, flt_ec, img_ecf, img_ecfw
 bool d_ans
 real th_f, exptime
@@ -120,13 +122,13 @@ for(i=low;i<upp;i=i+1)
 {
      file_ext="_ec"
 
-     thar_in=ex_thar//file_ext//i
-     if(access(thar_in//".fits"))
+     thar_ec=ex_thar//file_ext//i
+     if(access(thar_ec//".fits"))
      {
-          imdelete(thar_in)
+          imdelete(thar_ec)
      }
 
-     apall(input=ex_thar,output=thar_in,\
+     apall(input=ex_thar,output=thar_ec,\
       apertur="",\
       format='echelle',reference=ref,profile="",\
       interac-,find-,recente-,resize+,\
@@ -154,16 +156,16 @@ if(low<0){
   {
      file_ext="_ec"
 
-     thar_in=ex_thar//file_ext//i
-     if(access("database/ec"//thar_in))
+     thar_ec=ex_thar//file_ext//i
+     if(access("database/ec"//thar_ec))
      {
-          delete("database/ec"//thar_in)
+          delete("database/ec"//thar_ec)
      }
 
-     ecreidentify(images=thar_in, reference=ref_c, shift=0.,\
+     ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
       cradius=5.,threshold=10.,refit+,database="database")
 
-     ref_c=thar_in
+     ref_c=thar_ec
   }
 }
 
@@ -183,16 +185,16 @@ if(upp>0){
   {
      file_ext="_ec"
 
-     thar_in=ex_thar//file_ext//i
-     if(access("database/ec"//thar_in))
+     thar_ec=ex_thar//file_ext//i
+     if(access("database/ec"//thar_ec))
      {
-          delete("database/ec"//thar_in)
+          delete("database/ec"//thar_ec)
      }
 
-     ecreidentify(images=thar_in, reference=ref_c, shift=0.,\
+     ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
       cradius=5.,threshold=10.,refit+,database="database")
 
-     ref_c=thar_in
+     ref_c=thar_ec
   }
 }
 
@@ -231,9 +233,9 @@ for(i=low;i<upp;i=i+1)
      sarith(tempspec1,"*",fmean[i-low+1],img_ecf)
      imdelete(tempspec1)
 
-     thar_in=ex_thar//file_ext//i
+     thar_ec=ex_thar//file_ext//i
      refspectra(input=img_ecf,answer=yes,\
-      referen=thar_in,sort=" ", group=" ", answer=yes)
+      referen=thar_ec,sort=" ", group=" ", answer=yes)
      img_ecfw=ex_img//file_ext//"fw"//i
      if(access(img_ecfw//".fits"))
      {
@@ -252,6 +254,47 @@ imgets(inimage,'EXPTIME')
 exptime=real(imgets.value)
 hedit(outimage,'EXPTIME',exptime,add-,del-, ver-,show-,update+)
 
+if(clean){
+  for(i=low;i<upp;i=i+1)
+  {
+     file_ext="_ec"
+
+     img_ec=ex_img//file_ext//i
+     if(access(img_ec//".fits"))
+     {
+        imdelete(img_ec)
+     }
+
+     thar_ec=ex_thar//file_ext//i
+     if(access(thar_ec//".fits"))
+     {
+        imdelete(thar_ec)
+     }
+
+     flt_ec=ex_flt//file_ext//i
+     if(access(flt_ec//".fits"))
+     {
+        imdelete(flt_ec)
+     }
+
+
+     file_ext="_ecf"
+
+     img_ecf=ex_img//file_ext//i
+     if(access(img_ecf//".fits"))
+     {
+        imdelete(img_ecf)
+     }
+
+     file_ext="_ecfw"
+
+     img_ecfw=ex_img//file_ext//i
+     if(access(img_ecfw//".fits"))
+     {
+        imdelete(img_ecfw)
+     }
+  }
+}
 
 bye
 end
