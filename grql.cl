@@ -9,7 +9,7 @@ procedure grql(inid)
  string indirec {prompt = 'directory of RAW data\n'}
 
  bool  batch=no {prompt = 'Batch Mode?'}
- string inlist {prompt = 'Input file list for batch-mode\n'}
+ file  inlist {prompt = 'Input file list for batch-mode\n'}
 
  string ref_ap {prompt= "Aperture reference image"}
  string flatimg {prompt= "ApNormalized flat image"}
