@@ -86,7 +86,9 @@ task	gaoes_overscan 	        ="hdshome$gaoes_overscan.cl"
 task	gaoes_ecfw 	        ="hdshome$gaoes_ecfw.cl"
 task	gaoes_flat 	        ="hdshome$gaoes_flat.cl"
 task	gaoes_comp 	        ="hdshome$gaoes_comp.cl"
+task	gaoes_linear 	        ="hdshome$gaoes_linear.cl"
 task	grql 	        	="hdshome$grql.cl"
+task	gaoes_linstab 	        ="hdshome$gaoes_linstab.cl"
 
 beep
 print ("  ***************************************************************")

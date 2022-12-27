@@ -67,7 +67,9 @@ printf("##################################\n")
 printf("# [1/4] Overscan a raw ThAr frame\n")
 printf("##################################\n")
 
-grql(inid,indirec=indir,batch-,scatter-,ecfw-)
+grql(inid,indirec=indir,batch-,inlist=INDEF,ref_ap=INDEF,\
+  flatimg=INDEF,thar1d=INDEF,thar2d=INDEF,\
+  scatter-,ecfw-)
 output="G"//inid//"o"
 imcopy(output,thar)
 
