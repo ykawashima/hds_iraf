@@ -133,7 +133,7 @@ printf("##################################\n")
 
 grql("00000000",indirec=indir,batch+,inlist=inlist,ref_ap=apref,\
   flatimg=INDEF,thar1d=INDEF,thar2d=INDEF,\
-  st_x=low,ed_x=upp,scatter-,ecfw-)
+  st_x=low,ed_x=upp,cosmicra-,scatter-,ecfw-)
 
 
 temp1=mktemp("tmp_gaoes_flat")
