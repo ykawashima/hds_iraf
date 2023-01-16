@@ -36,14 +36,14 @@ procedure hdsql(inid)
 
 # Parameters for BIAS Subtraction
  bool   bs_save=yes {prompt = 'Save BIAS / Dark subtracted data?'}
- string bs_in="" {prompt = 'Input frame for BIAS / Dark subtraction (if necessary)'}
+# string bs_in="" {prompt = 'Input frame for BIAS / Dark subtraction (if necessary)'}
  string bs_style="bias" {prompt = 'Subtraction style (bias|dark)', enum="bias|dark|both"}
  string bs_refer {prompt = 'BIAS frame'}
  string bs_dark  {prompt = 'Dark + BIAS frame\n\n### Masking Bad Pixels ###'}
 
 # Parameters for maskbad
  bool   mb_save=yes {prompt = 'Save masked data?'}
- string mb_in="" {prompt = 'Input frame for Masking Bad Pixels (if necessary)'}
+# string mb_in="" {prompt = 'Input frame for Masking Bad Pixels (if necessary)'}
  string mb_refer {prompt = 'Bad Pix Mask frame'}
  bool   mb_auto=no {prompt = 'Auto mask creation from BIAS(bsrefer)?'}
  int   mb_upper=300 {prompt = 'Upper limit for mb_auto'}
@@ -52,12 +52,12 @@ procedure hdsql(inid)
  int   mb_base=1     {prompt = 'Baseline for wacosm11\n\n### Linearity Correction ###'}
 
 # Parameters for Linearity Correction
- bool   ln_save=yes {prompt = 'Save Linearity Corrected data?'}
- string ln_in="" {prompt = 'Input frame for Linearity Correction (if necessary)\n\n### Cosmic-ray Rejection ###'}
+ bool   ln_save=yes {prompt = 'Save Linearity Corrected data?\n\n### Cosmic-ray Rejection ###'}
+# string ln_in="" {prompt = 'Input frame for Linearity Correction (if necessary)\n\n### Cosmic-ray Rejection ###'}
 
 # Parameters for cosmicray-event rejection
  bool   cr_save=yes {prompt = 'Save cosmicray processed data?'}
- string cr_in="" {prompt = 'Input frame for wacosm1 (if necessary)'}
+# string cr_in="" {prompt = 'Input frame for wacosm1 (if necessary)'}
  string cr_proc="wacosm" {prompt = 'CR rejection procedure (wacosm|lacos)?\n### Parameters for wacosm11 ###', enum="wacosm|lacos"}
  real   cr_wbase=2000  {prompt = 'Baseline for wacosm11\n### Parameters for lacos_spec ###'}
  bool   cr_ldisp=no {prompt = 'Confirm w/Display? (need DS9)'}
@@ -83,7 +83,7 @@ procedure hdsql(inid)
 
 # Cross-Talk Subtraction
  bool   xt_save=yes {prompt = 'Save cross-talk subtracted data?'}
- string xt_in="" {prompt = 'Input frame for cross-talk subtraction (if necessary)'}
+# string xt_in="" {prompt = 'Input frame for cross-talk subtraction (if necessary)'}
  real    xt_amp=0.0012 {prompt = 'Cross-talk amplifier'}
  bool   xt_disp=no {prompt = 'Confirm w/Display? (need DS9)\n\n### Flat Fielding ###'}
 
@@ -126,7 +126,7 @@ procedure hdsql(inid)
 
 # Parameters for remask
  bool  zm_save=yes  {prompt = 'Save re-masked data?'}
- string zm_in=""    {prompt = 'Input frame for re-mask afre wave calib. (if necessary)'}
+# string zm_in=""    {prompt = 'Input frame for re-mask afre wave calib. (if necessary)'}
  real   zm_val=1.0 {prompt = 'Pixel Value replaced to All Bad Pixels'}
  real   zm_thresh=0.1 {prompt = 'Threshold pixel value for bad column [0-1]\n\n### Heliocentric Wavelength Correction ###'}
 
@@ -320,13 +320,13 @@ printf("##################################\n")
    flag0=flag
    flag=flag+"b"	
    if(flag0==""){
-      if(bs_in==""){
+#      if(bs_in==""){
         bsinfile=input
-      }
-      else{
-        bsinfile=bs_in
-        output =bs_in
-      }
+#      }
+#      else{
+#        bsinfile=bs_in
+#        output =bs_in
+#      }
    }
    else{
      bsinfile=nextin
@@ -414,13 +414,13 @@ printf("##################################\n")
    flag0=flag
    flag=flag+"m"	
    if(flag0==""){
-      if(mb_in==""){
+#      if(mb_in==""){
         mbinfile=input
-      }
-      else{
-        mbinfile=mb_in
-        output =mb_in
-      }
+#      }
+#      else{
+#        mbinfile=mb_in
+#        output =mb_in
+#      }
    }
    else{
      mbinfile=nextin
@@ -511,13 +511,13 @@ printf("##################################\n")
    flag0=flag
    flag=flag+"l"	
    if(flag0==""){
-      if(ln_in==""){
+#      if(ln_in==""){
         lninfile=input
-      }
-      else{
-        lninfile=ln_in
-        output=ln_in
-      }
+#      }
+#      else{
+#        lninfile=ln_in
+#        output=ln_in
+#      }
 
       imgets(lninfile,'HQ_MB')
       hq_tmp=imgets.value
@@ -585,13 +585,13 @@ printf("##################################\n")
      printf("### Using wacosm for CR Rejection ###\n")
    }
    if(flag0==""){
-      if(cr_in==""){
+#      if(cr_in==""){
         crinfile=input
-      }
-      else{
-        crinfile=cr_in
-        output=cr_in
-      }
+#      }
+#      else{
+#        crinfile=cr_in
+#        output=cr_in
+#      }
 
       imgets(crinfile,'HQ_MB')
       hq_tmp=imgets.value
@@ -778,13 +778,13 @@ printf("##################################\n")
    flag0=flag
    flag=flag+"x"	
    if(flag0==""){
-      if(xt_in==""){
+#      if(xt_in==""){
         xtinfile=input
-      }
-      else{
-        xtinfile=xt_in
-        output=xt_in
-      }
+#      }
+#      else{
+#        xtinfile=xt_in
+#        output=xt_in
+#      }
 
       imgets(xtinfile,'HQ_MB')
       hq_tmp=imgets.value
@@ -1206,13 +1206,13 @@ printf("##################################\n")
    flag0=flag
    flag=flag+"z"	
    if(flag0==""){
-      if(zm_in==""){
+#      if(zm_in==""){
         zminfile=input
-      }
-      else{
-        zminfile=zm_in
-        output=zm_in
-      }
+#      }
+#      else{
+#        zminfile=zm_in
+#        output=zm_in
+#      }
 
       imgets(zminfile,'HQ_AP')
       hq_tmp=imgets.value

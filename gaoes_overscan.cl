@@ -32,6 +32,46 @@ begin
 	real os1_sigma,os2_sigma,os3_sigma,os4_sigma
 	real os1, os2
 	
+#====== IRAF version check =======	
+	string tmpver1, tmpver2, tmpver3, tmpver4, vertxt1, vertxt2, vertxt3
+	int majver, subver
+	bool newiraf
+	task $awk = $foreign
+
+	tmpver1 = mktemp("tmpver1")
+	tmpver2 = mktemp("tmpver2")
+	tmpver3 = mktemp("tmpver3")
+	tmpver4 = mktemp("tmpver4")
+	vertxt1=envget("version")
+	printf("  IRAF version = %s\n", vertxt1)
+	print(vertxt1, >tmpver1)
+	awk("-F' V'","'{print $2}'", tmpver1, > tmpver2)
+	awk("-F'.'","'{print $1}'", tmpver2, > tmpver3)
+	awk("-F'.'","'{print $2}'", tmpver2, > tmpver4)
+	list=tmpver3
+	while(fscan(list,vertxt2)==1){
+	  majver=int(vertxt2)
+	}
+	list=tmpver4
+	while(fscan(list,vertxt3)==1){
+	  subver=int(vertxt3)
+	}
+	delete(tmpver1)
+	delete(tmpver2)
+	delete(tmpver3)
+	delete(tmpver4)
+	printf("    major = %d  /  sub = %d\n", majver, subver)
+
+	if(majver>2){
+	  newiraf = yes
+	}
+	else if (subver>=17){
+	  newiraf = yes
+	}
+	else{
+	  newiraf = no
+	}
+#====== end of IRAF version check ========
 	
 	################### CCD Format ##################
 	w_o = 50
@@ -139,7 +179,12 @@ begin
 	tmp0 = mktemp("tmp$tmp0")
 	print(tmp1, >> tmp0)
 	print(tmp2, >> tmp0)
-	imjoin(input="@"//tmp0, output=outimg, join_dim=1, ver-)
+	if(newiraf){	
+	  imjoin(input="@"//tmp0, output=outimg, joindim=1, outtype="double")
+	}
+	else{
+	  imjoin(input="@"//tmp0, output=outimg, join_dim=1, ver-)
+	}
 
 	# correct header
 #	hedit(outimg, fields="N2XIS1", value=oimgmax1, ver-, show-)
