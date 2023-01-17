@@ -1,6 +1,7 @@
 ##################################################################
 # grql : Seimei GAOES-RV Quick Look Script 
 #  developed by Akito Tajitsu <tajitsu@subaru.naoj.org>
+#              2023.01.17 ver.0.10
 #              2022.10.25 ver.0.01
 ###################################################################
 procedure grql(inid)
@@ -48,18 +49,18 @@ procedure grql(inid)
 # Extract / Flat fielding / Wavecalib
 
 begin
-string version="0.01 (10-25-2022)"
+string version="0.10 (01-17-2023)"
 string input_id, tmp_inid
 string apref, flt, thar1, thar2
 
-int batch_n
+int batch_n, batch_i
 string temp_id
-bool d_ans,ap_done
+bool d_ans,ap_done, do_flag
 
 string input, input0, output
 
 string flag
-string crfile, osfile, scfile, ecfile,nextin, crinfile
+string crfile, osfile, scfile, ecfile,nextin, crinfile, batch_id[2000]
 
 apref=ref_ap
 flt=flatimg
@@ -77,6 +78,7 @@ if(batch){
   while(fscan(list,temp_id)==1){
     printf("   %s/GRA%s\n",indirec,temp_id)
     batch_n=batch_n+1
+    batch_id[batch_n]=temp_id
   }
 
   printf(" Total frame number=%d.\n",batch_n)
@@ -90,18 +92,21 @@ if(batch){
   list=inlist
 }
 
-BATCH_START:
+do_flag=yes
+batch_i=1
+while(do_flag){
 
 if(batch){
-  if(fscan(list,temp_id)==1){
-    input_id=temp_id
+  if(batch_i<batch_n+1){
+    input_id=batch_id[batch_i]
     printf("\n##########################\n")
     printf("###   Batch Mode\n")
     printf("###     Input ID = %s\n", input_id)
     printf("##########################\n\n")
   }
   else{
-     goto BATCH_END
+    do_flag=no
+    bye
   }
 }
 else{
@@ -290,16 +295,16 @@ printf("##############################################################\n")
 #endofp:
 
 if(batch){
-  goto BATCH_START
+  batch_i=batch_i+1
 }
 else{
   if (splot && ap_done){
       splot (images=output//flag,line=sp_line,band=1)
   }
+  do_flag=no
+  bye
 }
-
-
-BATCH_END:
+}
 
 bye
 end

@@ -143,7 +143,7 @@ procedure hdsql(inid)
  int sp_line=1 {prompt = 'Splot image line/aperture to plot\n'}
 
 begin
-string version="2.51 (02-22-2016)"
+string version="3.00 (01-17-2023)"
 string input_id
 string input0,input,output
 string flag0,flag
@@ -171,10 +171,10 @@ real et_ratio
 bool os_done, bs_done, mb_done, ln_done, cr_done,sc_done,fl_done,is_done,xt_done,ap_done
 bool wv_done, zm_done,rv_done
 string hq_tmp
-bool d_ans,la_ans
+bool d_ans,la_ans, do_flag
 string nextin
-string temp_id
-int batch_n
+string temp_id, batch_id[2000]
+int batch_n, batch_i
 real is_low, is_upp
 real ls_gain, ls_readn, ls_sigclip, ls_sigfrac,ls_objlim
 int  ls_xorder, ls_yorder, ls_niter
@@ -206,6 +206,7 @@ if(batch){
   while(fscan(list,temp_id)==1){
     printf("   %s%s\n",indirec,temp_id)
     batch_n=batch_n+1
+    batch_id[batch_n]=temp_id
   }
 
   printf(" Total frame number=%d.\n",batch_n)
@@ -219,18 +220,21 @@ if(batch){
   list=inlist
 }
 
-BATCH_START:
+do_flag=yes
+batch_i=1
+while(do_flag){
 
 if(batch){
-  if(fscan(list,temp_id)==1){
-    input_id=temp_id
+  if(batch_i<batch_n+1){
+    input_id=batch_id[batch_i]
     printf("\n##########################\n")
     printf("###   Batch Mode\n")
     printf("###     Input ID = %s\n", input_id)
     printf("##########################\n\n")
   }
   else{
-     goto BATCH_END
+    do_flag=no
+    bye
   }
 }
 else{
@@ -1557,10 +1561,13 @@ printf("##############################################################\n")
 #endofp:
 
 if(batch){
-  goto BATCH_START
+  batch_i=batch_i+1
 }
-
-BATCH_END:
+else{
+  do_flag=no
+  bye
+}
+}
 
 bye
 end
