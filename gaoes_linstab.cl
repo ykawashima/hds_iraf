@@ -63,6 +63,8 @@ while(fscan(list,inimg)==1){
 	xbin=int(imgets.value)
 	imgets(inimg,'BIN-FCT2')
 	ybin=int(imgets.value)
+	xbin=1
+	ybin=1
 	imgets(inimg,'EXPTIME')
 	e_time=int(imgets.value)
 	imgets(inimg,'i_naxis1')

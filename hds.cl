@@ -89,6 +89,7 @@ task	gaoes_comp 	        ="hdshome$gaoes_comp.cl"
 task	gaoes_linear 	        ="hdshome$gaoes_linear.cl"
 task	grql 	        	="hdshome$grql.cl"
 task	gaoes_linstab 	        ="hdshome$gaoes_linstab.cl"
+task	gaoes_linstat 	        ="hdshome$gaoes_linstat.cl"
 
 beep
 print ("  ***************************************************************")
