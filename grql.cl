@@ -53,7 +53,7 @@ string version="0.10 (01-17-2023)"
 string input_id, tmp_inid
 string apref, flt, thar1, thar2
 
-int batch_n, batch_i
+int batch_n, batch_i, end_la
 string temp_id
 bool d_ans,ap_done, do_flag
 
@@ -170,48 +170,57 @@ if (cosmicra){
 #
 
    if (cr_proc == "lacos"){
-LACOSM:
-     print("# lacos_spec is now processing...")
-     printf("### If failed, load STSDAS then retry ###\n")
-     if((access(crinfile//"_badpix"))||access(crinfile//"_badpix"//".fits")){
-        imdelete(crinfile//"_badpix")
-     }
-     lacos_spec(crinfile,crfile,crinfile//"_badpix",
-       gain=ls_gain,readn=ls_readn,xorder=ls_xorder,yorder=ls_yorder,
-       sigclip=ls_sigclip,sigfrac=ls_sigfrac,objlim=ls_objlim,
-       niter=ls_niter,ver+)
-     if(cr_ldisp){
-       display(crinfile,1)
-       display(crfile,2)
-       display(crinfile//"_badpix",3)
-       printf("# Displaying [1]IN  [2]OUT  [3]BadPix ...\n")     
-       printf("# If you want to compare please tile them in your DS9\n")     
-       printf(">>> OK to go to the next step? (y/n) : ")     
-       while(scan(la_ans)!=1) {}
-       if(!la_ans){
-         printf(">>> Input New Xorder (%d) : ",ls_xorder) 
-         while( scan(ans_int) == 0 )
-         print(ans_int)
-         ls_xorder=ans_int
-         printf(">>> Input New Yorder (%d) : ",ls_yorder) 
-         while( scan(ans_int) == 0 )
-         print(ans_int)
-         ls_yorder=ans_int
-         printf(">>> Input New SigClip (%.2f) : ",ls_sigclip) 
-         while( scan(ans_real) == 0 )
-         print(ans_real)
-         ls_sigclip=ans_real
-         printf(">>> Input New SigFrac (%.2f) : ",ls_sigfrac) 
-         while( scan(ans_real) == 0 )
-         print(ans_real)
-         ls_sigfrac=ans_real
-         printf(">>> Input New ObjLim (%.2f) : ",ls_objlim) 
-         while( scan(ans_real) == 0 )
-         print(ans_real)
-         ls_objlim=ans_real
+### LACOSM:
+     end_la=0
+     while(end_la == 0){
+       print("# lacos_spec is now processing...")
+       printf("### If failed, load STSDAS then retry ###\n")
+       if((access(crinfile//"_badpix"))||access(crinfile//"_badpix"//".fits")){
+          imdelete(crinfile//"_badpix")
+       }
+       lacos_spec(crinfile,crfile,crinfile//"_badpix",
+         gain=ls_gain,readn=ls_readn,xorder=ls_xorder,yorder=ls_yorder,
+         sigclip=ls_sigclip,sigfrac=ls_sigfrac,objlim=ls_objlim,
+         niter=ls_niter,ver+)
+       if(cr_ldisp){
+         display(crinfile,1)
+         display(crfile,2)
+         display(crinfile//"_badpix",3)
+         printf("# Displaying [1]IN  [2]OUT  [3]BadPix ...\n")     
+         printf("# If you want to compare please tile them in your DS9\n")     
+         printf(">>> OK to go to the next step? (y/n) : ")     
+         while(scan(la_ans)!=1) {}
+         if(!la_ans){
+           printf(">>> Input New Xorder (%d) : ",ls_xorder) 
+           while( scan(ans_int) == 0 )
+           print(ans_int)
+           ls_xorder=ans_int
+           printf(">>> Input New Yorder (%d) : ",ls_yorder) 
+           while( scan(ans_int) == 0 )
+           print(ans_int)
+           ls_yorder=ans_int
+           printf(">>> Input New SigClip (%.2f) : ",ls_sigclip) 
+           while( scan(ans_real) == 0 )
+           print(ans_real)
+           ls_sigclip=ans_real
+           printf(">>> Input New SigFrac (%.2f) : ",ls_sigfrac) 
+           while( scan(ans_real) == 0 )
+           print(ans_real)
+           ls_sigfrac=ans_real
+           printf(">>> Input New ObjLim (%.2f) : ",ls_objlim) 
+           while( scan(ans_real) == 0 )
+           print(ans_real)
+           ls_objlim=ans_real
 
-         imdelete(crfile)
-         goto LACOSM
+           imdelete(crfile)
+###         goto LACOSM
+         }
+	 else{
+	   end_la=1
+	 }
+       }
+       else{
+         end_la=1
        }
      }
    }

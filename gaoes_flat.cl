@@ -26,7 +26,7 @@ begin
 #
 string indir, flat, apref, temp1, temp_id, flag, output, scfile, nmfile
 string apnew
-int low, upp
+int low, upp, imnum
 bool d_ans
 #
 #
@@ -139,12 +139,19 @@ grql("00000000",indirec=indir,batch+,inlist=inlist,ref_ap=apref,\
 temp1=mktemp("tmp_gaoes_flat")
 
 list=inlist
+imnum=0
 while(fscan(list,temp_id)==1){
   printf("G%so\n",temp_id,>>temp1)
+  imnum=imun+1
 }
 
 printf("### imcombine ovescanned flat images ###\n")
-imcombine("@"//temp1,flat,combine="ave",reject="minmax")
+if(imnum>2){
+  imcombine("@"//temp1,flat,combine="ave",reject="minmax")
+}
+else{
+  imcombine("@"//temp1,flat,combine="ave",reject="none")
+}
 
 output=flat
 
