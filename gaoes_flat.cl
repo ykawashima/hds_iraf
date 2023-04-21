@@ -20,6 +20,8 @@ int ed_x=53  {prompt ="End pixel to extract\n"}
 bool scatter=yes {prompt ="apscatter? (yes/no)"}
 bool normalize=yes {prompt ="apnormalize? (yes/no)\n"}
 
+bool interactive=yes {prompt ="Run task interactively? (yes/no)\n"}
+
 begin
 #
 # variables
@@ -46,28 +48,38 @@ upp = ed_x
 
 if((access(flat))||access(flat//".fits")){
        printf("*** Output file \"%s\" already exsits!!\n",flat)
-       printf(">>> Do you want to overwrite this file? (y/n) : ")
-       while(scan(d_ans)!=1) {}
-       if(d_ans){
-          imdelete(flat)
+       if(interactive){
+         printf(">>> Do you want to overwrite this file? (y/n) : ")
+         while(scan(d_ans)!=1) {}
+         if(d_ans){
+            imdelete(flat)
+         }
+         else{
+            printf("!!! Please remove exsiting file !!! ABORT !!!\n")
+            bye
+         }
        }
        else{
-          printf("!!! Please remove exsiting file !!! ABORT !!!\n")
-          bye
+         imdelete(flat)
        }
 }
 
 if(scatter){
   if((access(flat//".sc"))||access(flat//".sc.fits")){
        printf("*** Output file \"%s.sc\" already exsits!!\n",flat)
-       printf(">>> Do you want to overwrite this file? (y/n) : ")
-       while(scan(d_ans)!=1) {}
-       if(d_ans){
-          imdelete(flat//".sc")
+       if(interactive){
+         printf(">>> Do you want to overwrite this file? (y/n) : ")
+         while(scan(d_ans)!=1) {}
+         if(d_ans){
+            imdelete(flat//".sc")
+         }
+         else{
+            printf("!!! Please remove exsiting file !!! ABORT !!!\n")
+            bye
+         }
        }
        else{
-          printf("!!! Please remove exsiting file !!! ABORT !!!\n")
-          bye
+            imdelete(flat//".sc")
        }
   }
 }
@@ -76,28 +88,37 @@ if(scatter){
 if(normalize){
   if((access(flat//".nm"))||access(flat//".nm.fits")){
        printf("*** Output file \"%s.nm\" already exsits!!\n",flat)
-       printf(">>> Do you want to overwrite this file? (y/n) : ")
-       while(scan(d_ans)!=1) {}
-       if(d_ans){
-          imdelete(flat//".nm")
+       if(interactive){
+         printf(">>> Do you want to overwrite this file? (y/n) : ")
+         while(scan(d_ans)!=1) {}
+         if(d_ans){
+            imdelete(flat//".nm")
+         }
+         else{
+            printf("!!! Please remove exsiting file !!! ABORT !!!\n")
+            bye
+         }
        }
        else{
-          printf("!!! Please remove exsiting file !!! ABORT !!!\n")
-          bye
+            imdelete(flat//".nm")
        }
   }
-
   if(scatter){
     if((access(flat//".sc.nm"))||access(flat//".sc.nm.fits")){
        printf("*** Output file \"%s.sc.nm\" already exsits!!\n",flat)
-       printf(">>> Do you want to overwrite this file? (y/n) : ")
-       while(scan(d_ans)!=1) {}
-       if(d_ans){
-          imdelete(flat//".sc.nm")
+       if(interactive){
+         printf(">>> Do you want to overwrite this file? (y/n) : ")
+         while(scan(d_ans)!=1) {}
+         if(d_ans){
+            imdelete(flat//".sc.nm")
+         }
+         else{
+            printf("!!! Please remove exsiting file !!! ABORT !!!\n")
+            bye
+         }
        }
        else{
-          printf("!!! Please remove exsiting file !!! ABORT !!!\n")
-          bye
+            imdelete(flat//".sc.nm")
        }
     }
   }
@@ -107,20 +128,31 @@ if(normalize){
 if(apflag){
   if((access(apnew))||access(apnew//".fits")){
        printf("*** Output file \"%s\" already exsits!!\n",apnew)
-       printf(">>> Do you want to overwrite this file? (y/n) : ")
-       while(scan(d_ans)!=1) {}
-       if(d_ans){
-          imdelete(apnew)
-          if((access(apnew//".ec"))||access(apnew//".ec.fits")){
-             imdelete(apnew//".ec")
-          }
-          if(access("database/ap"//apnew)){
-             delete("database/ap"//apnew)
-          }
+       if(interactive){
+         printf(">>> Do you want to overwrite this file? (y/n) : ")
+         while(scan(d_ans)!=1) {}
+         if(d_ans){
+            imdelete(apnew)
+            if((access(apnew//".ec"))||access(apnew//".ec.fits")){
+               imdelete(apnew//".ec")
+            }
+            if(access("database/ap"//apnew)){
+               delete("database/ap"//apnew)
+            }
+         }
+         else{
+            printf("!!! Please remove exsiting file !!! ABORT !!!\n")
+            bye
+         }
        }
        else{
-          printf("!!! Please remove exsiting file !!! ABORT !!!\n")
-          bye
+            imdelete(apnew)
+            if((access(apnew//".ec"))||access(apnew//".ec.fits")){
+               imdelete(apnew//".ec")
+            }
+            if(access("database/ap"//apnew)){
+               delete("database/ap"//apnew)
+            }
        }
   }
 }
@@ -131,7 +163,7 @@ printf("##################################\n")
 printf("# [1/4] Overscan raw flat frames\n")
 printf("##################################\n")
 
-grql("00000000",indirec=indir,batch+,inlist=inlist,ref_ap=apref,\
+grql("00000000",indirec=indir,batch+,inlist=inlist,interactive-,ref_ap=apref,\
   flatimg=INDEF,thar1d=INDEF,thar2d=INDEF,\
   st_x=low,ed_x=upp,cosmicra-,scatter-,ecfw-)
 
@@ -142,7 +174,7 @@ list=inlist
 imnum=0
 while(fscan(list,temp_id)==1){
   printf("G%so\n",temp_id,>>temp1)
-  imnum=imun+1
+  imnum=imnum+1
 }
 
 printf("### imcombine ovescanned flat images ###\n")
@@ -169,7 +201,7 @@ if(apflag){
     resize+, interac-)
 
   apall(apnew,ref=apref,output=apnew//".ec",resize-,recenter-,trace-,\
-      find-,edit+)
+      find-,edit=interactive, extract+, review=interactive, mode="ql")
 
   apref=apnew
 }
@@ -188,8 +220,8 @@ if(scatter){
     resize+, interac-)
 
   print("# Scattered light subtracting is now processing...")
-  apscatter(flat,scfile,interac+,referen=apref,recente-,resize-,\
-    edit+,trace-,fitscat+,subtrac+,smooth+,fittrac+)
+  apscatter(flat,scfile,interac=interactive,referen=apref,recente-,resize-,\
+    edit=interactive,trace-,fitscat+,subtrac+,smooth+,fittrac+)
 
  output=scfile
 }
@@ -207,9 +239,9 @@ if(normalize){
   apresize(apref,refer=" ",llimit=low, ulimit=upp, ylevel=INDEF,\
     resize+, interac-)
 
-  print("# Scattered light subtracting is now processing...")
-  apnormalize(scfile,nmfile,interac+,referen=apref,recente-,resize-,\
-    edit+,trace-,fittrac+,normalize+,fitspec+,order=15,niterate=5)
+  print("# Normalization is now processing...")
+  apnormalize(scfile,nmfile,interac=interactive,referen=apref,recente-,resize-,\
+    edit=interactive,trace-,fittrac+,normalize+,fitspec+,order=15,niterate=5)
 
  output=nmfile
 }

@@ -11,6 +11,8 @@ procedure grql(inid)
 
  bool  batch=no {prompt = 'Batch Mode?'}
  file  inlist {prompt = 'Input file list for batch-mode\n'}
+ 
+ bool interactive=yes {prompt ="Run task interactively? (yes/no)\n"}
 
  string ref_ap {prompt= "Aperture reference image"}
  string flatimg {prompt= "ApNormalized flat image"}
@@ -82,11 +84,13 @@ if(batch){
   }
 
   printf(" Total frame number=%d.\n",batch_n)
-  printf(">>> Do you want to start Batch mode? (y/n) : ")
-  while(scan(d_ans)!=1) {}
-  if(!d_ans){
-    printf("!!! ABORT !!!\n")
-    bye
+  if(interactive){
+    printf(">>> Do you want to start Batch mode? (y/n) : ")
+    while(scan(d_ans)!=1) {}
+    if(!d_ans){
+      printf("!!! ABORT !!!\n")
+      bye
+    }
   }
 
   list=inlist
@@ -256,7 +260,7 @@ if (scatter){
 
   printf("# Resizing aperture size of \"%s\"......\n", apref)
   apresize(apref,refer=" ",llimit=st_x, ulimit=ed_x, ylevel=INDEF,\
-    resize+, interac-)
+    find-, resize+, interac-)
 
   print("# Scattered light subtracting is now processing...")
   apscatter(nextin,scfile,interac=sc_inter,referen=apref,recente-,resize-,\

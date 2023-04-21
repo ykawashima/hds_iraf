@@ -9,7 +9,6 @@ rv
 plot
 proto
 twodspec
-apextract
 longslit
 onedspec
 utilities

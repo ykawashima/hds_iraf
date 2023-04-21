@@ -31,10 +31,11 @@ begin
 string inimage, outimage, flat, ref, thar, thar1
 int i, ysize, low, upp, i_ord,  i_st
 real fmean[200]
-string file_ext, ex_flt, ex_thar, ref_c, thar_ec, ex_img
+bool useflg[200]
+string file_ext, ex_flt, ex_thar, ref_c, thar_ec, ex_img,  refs
 string tempspec1, templist, img_ec, flt_ec, img_ecf, img_ecfw
 bool d_ans, flag_go
-real th_f, exptime
+real th_f, exptime,  dshift
 #
 #
 #
@@ -45,7 +46,7 @@ flat = flatimg
 ref  = ref_ap
 th_f=threshold
 
-thar2 = thar2d
+#thar2 = thar2d
 thar1 = thar1d
 
 low = st_x
@@ -115,9 +116,11 @@ for(i=low;i<upp;i=i+1)
      if(fmean[i-low+1]<th_f){
        printf(" Pixel = %2d, Mean = %f  -->  Skip this aperture!!\n", i, fmean[i-low+1])
        fmean[i-low+1]=0.
+       useflg[i-low+1]=no
      }
      else{
        printf(" Pixel = %2d, Mean = %f\n", i, fmean[i-low+1])
+       useflg[i-low+1]=yes
      }
 
 }
@@ -178,6 +181,7 @@ else{
 
 if(low<0){
   printf("\n\n########## EcReidetifying ThAr : -1 -> %d ##########\n",low)
+  dshift=0
   for(i=i_st;i>low-1;i=i-1)
   {
      file_ext="_ec"
@@ -198,11 +202,17 @@ if(low<0){
      }
 
      if(flag_go){
-       ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
+       ecreidentify(images=thar_ec, reference=ref_c, shift=dshift,\
         cradius=5.,threshold=10.,refit+,database="database")
      }
 
-     ref_c=thar_ec
+     if(useflg[i-low+1]){
+       ref_c=thar_ec
+       dshift=0
+     }
+     else{
+       dshift=dshift-1.0
+     }
   }
 }
 
@@ -218,6 +228,7 @@ else{
 
 if(upp>0){
   printf("\n\n########## EcReidetifying ThAr : 0 -> %d ##########\n",upp)
+  dshift=0
   for(i=i_st;i<upp;i=i+1)
   {
      file_ext="_ec"
@@ -238,11 +249,17 @@ if(upp>0){
      }
 
      if(flag_go){
-       ecreidentify(images=thar_ec, reference=ref_c, shift=0.,\
+       ecreidentify(images=thar_ec, reference=ref_c, shift=dshift,\
         cradius=5.,threshold=10.,refit+,database="database")
      }
 
-     ref_c=thar_ec
+     if(useflg[i-low+1]){
+       ref_c=thar_ec
+       dshift=0
+     }
+     else{
+       dshift=dshift+1.0
+     }
   }
 }
 
@@ -261,6 +278,7 @@ for(i=low;i<upp;i=i+1)
      {
           imdelete(img_ec)
      }
+     print("apall")
      apall(input=ex_img,output=img_ec,\
       apertur="",\
       format='echelle',reference=ref,profile="",\
@@ -282,7 +300,8 @@ for(i=low;i<upp;i=i+1)
      imdelete(tempspec1)
 
      thar_ec=ex_thar//file_ext//i
-     refspectra(input=img_ecf,answer=yes,\
+     printf("refspec  ref=%s\n", thar_ec)
+     refspectra(input=img_ecf,\
       referen=thar_ec,sort=" ", group=" ", answer=yes)
      img_ecfw=ex_img//file_ext//"fw"//i
      if(access(img_ecfw//".fits"))
