@@ -1,7 +1,7 @@
 ##################################################################
 # grql : Seimei GAOES-RV Quick Look Script 
-#  developed by Akito Tajitsu <tajitsu@subaru.naoj.org>
-#              2023.01.17 ver.0.10
+#  developed by Akito Tajitsu <akito.tajitsu@nao.ac.jp>
+#              2023.04.27 ver.0.20
 #              2022.10.25 ver.0.01
 ###################################################################
 procedure grql(inid)
@@ -25,6 +25,7 @@ procedure grql(inid)
  bool   cosmicra=no {prompt = 'Cosmic Ray Rejection?'}
  bool   scatter=no {prompt = 'Scattered Light Subtraction?'}
  bool   ecfw=no {prompt = 'Extract / Flat-fielding / Wavelength calib.?'}
+ bool   getcnt=no  {prompt = 'Measure spectrum count?'}
  bool   splot=no    {prompt = 'Splot Spectrum?\n\n### Cosmic-Ray Rejection. ###'}
 
 # Parameters for overscan
@@ -43,15 +44,22 @@ procedure grql(inid)
  int   cr_lniter=4  {prompt = 'maximum number of iterations\n\n### Scattered-light Subtraction ###'}
 
 # scattered light subtraction
- bool   sc_inter=yes {prompt = 'Run apscatter interactively?\n\n### Splot. ###'}
+ bool   sc_inter=yes {prompt = 'Run apscatter interactively?\n\n### Get Spectrum Count. ###'}
 
+# Parameters for Get Spectrum Count
+ int ge_line=1 {prompt = 'Order line to get count\n'}
+ int ge_stx=1900  {prompt ="Start pixel to get count"}
+ int ge_edx=2100  {prompt ="End pixel to get count"}
+ real ge_low=0.5  {prompt ="Low rejection in sigma of fit"}
+ real ge_high=1.5   {prompt ="High rejection in sigma of fit\n\n### Splot ###"}
+ 
 #splot
  int sp_line=1 {prompt = 'Splot image line/aperture to plot\n'}
 
 # Extract / Flat fielding / Wavecalib
 
 begin
-string version="0.10 (01-17-2023)"
+string version="0.20 (04-27-2023)"
 string input_id, tmp_inid
 string apref, flt, thar1, thar2
 
@@ -63,6 +71,10 @@ string input, input0, output
 
 string flag
 string crfile, osfile, scfile, ecfile,nextin, crinfile, batch_id[2000]
+
+string temp1, temp2, temp3
+int mean_cnt, max_cnt, cont_cnt
+string cnt_out
 
 apref=ref_ap
 flt=flatimg
@@ -290,6 +302,10 @@ if(ecfw){
   gaoes_ecfw(nextin,ecfile,ref_ap=apref, flatimg=flt,thar1d=thar1, \
    thar2d=thar2, st_x=st_x,ed_x=ed_x)
   hedit(ecfile,'GRQL_EC',"done",add+,del-, ver-,show-,update+)
+  hedit(ecfile,'G_APREF',apref,add+,del-, ver-,show-,update+)
+  hedit(ecfile,'G_FLAT',flt,add+,del-, ver-,show-,update+)
+  hedit(ecfile,'G_THAR1D',thar1,add+,del-, ver-,show-,update+)
+  hedit(ecfile,'G_THAR2D',thar2,add+,del-, ver-,show-,update+)
   nextin=ecfile
   ap_done=yes
 }
@@ -306,6 +322,27 @@ printf("#  Resultant File :   %s%s.fits\n",output,flag)
 printf("##############################################################\n")
 
 #endofp:
+
+if (getcnt && ap_done){
+   temp1=mktemp("tmp_getcnt")
+   temp2=mktemp("tmp_getcnt_c")
+   temp3=mktemp("tmp_getcnt_cp")
+   scopy(nextin//"[*,"//ge_line//"]",temp1)
+   continuum(temp1,temp2,bands=1,type="fit",functio="spline3",order=6,high_rej=ge_high,low_rej=ge_low,ask="no")
+   scopy(temp2//"["//ge_stx//":"//ge_edx//"]",temp3)
+   imstat(image=temp3, field='mean', format-) |scan(mean_cnt)
+   imstat(image=temp3, field='max', format-) |scan(max_cnt)
+   cnt_out="G"//input_id//"_cnt"
+   cont_cnt=(max_cnt+mean_cnt)/2
+   print(cont_cnt, > cnt_out)
+   imdelete(temp1)
+   imdelete(temp2)
+   imdelete(temp3)
+   printf("\n")
+   printf("*** Continuum Count is %de- at order %d. ***\n",cont_cnt,sp_line)
+   printf("\n")
+}
+
 
 if(batch){
   batch_i=batch_i+1
