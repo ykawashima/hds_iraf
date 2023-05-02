@@ -4,17 +4,19 @@ import os
 from pyraf import iraf
 
 
-if len(sys.argv) != 2:
-  print(" [usage] python3 splot.py spectrum_file")
+if len(sys.argv) != 3:
+  print(" [usage] python3 splot.py image line")
+  print("    image   :  Imgae to plot")
+  print("    line    :  Image line to plot")
   sys.exit()
 
   
-inimage    = sys.argv[1]
+image   = sys.argv[1]
+line    = sys.argv[2]
 
 iraf.gaoes()
 
-#inid = sys.argv[1]
 iraf.set(stdimage="imt4096")
-iraf.splot(inimage, 1)
+iraf.splot(images=image, line=line, band=1)
 
     

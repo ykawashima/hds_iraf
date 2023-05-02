@@ -17,6 +17,13 @@ file   new_ap  {prompt= "New aperture image\n"}
 int st_x=-54  {prompt ="Start pixel to extract"}
 int ed_x=53  {prompt ="End pixel to extract\n"}
 
+bool imcheck=yes {prompt ="Mean count check? (yes/no)"}
+int ic_x1=88 {prompt ="x1 for average measuring are"}
+int ic_x2=92 {prompt ="x2 for average measuring are"}
+int ic_y1=1950 {prompt ="y1 for average measuring are"}
+int ic_y2=2100 {prompt ="y2 for average measuring are"}
+int ic_coff=30000 {prompt ="Minimum count to accept\n"}
+
 bool scatter=yes {prompt ="apscatter? (yes/no)"}
 bool normalize=yes {prompt ="apnormalize? (yes/no)\n"}
 
@@ -30,6 +37,7 @@ string indir, flat, apref, temp1, temp_id, flag, output, scfile, nmfile
 string apnew
 int low, upp, imnum
 bool d_ans
+int m_val
 #
 #
 #
@@ -173,8 +181,15 @@ temp1=mktemp("tmp_gaoes_flat")
 list=inlist
 imnum=0
 while(fscan(list,temp_id)==1){
-  printf("G%so\n",temp_id,>>temp1)
-  imnum=imnum+1
+  imstat(image="G"//temp_id//"o"//"["//ic_x1//":"//ic_x2//","//ic_y1//":"//ic_y2//"]", field='mean', format-) | scan(m_val)
+  if(m_val>ic_coff){
+    printf("G%so  (%d)  OK\n",temp_id, m_val)
+    printf("G%so\n",temp_id,>>temp1)
+    imnum=imnum+1
+  }
+  else{
+    printf("G%so  (%d)  rejected\n",temp_id,m_val)
+  }
 }
 
 printf("### imcombine ovescanned flat images ###\n")

@@ -55,6 +55,7 @@ procedure grql(inid)
  
 #splot
  int sp_line=1 {prompt = 'Splot image line/aperture to plot\n'}
+ bool   clean=no {prompt = 'Clean up intermediate images? (yes/no)'}
 
 # Extract / Flat fielding / Wavecalib
 
@@ -300,7 +301,7 @@ if(ecfw){
 
   printf("# Extraction / Flat fielding / Wavelength calibration is now processing...")
   gaoes_ecfw(nextin,ecfile,ref_ap=apref, flatimg=flt,thar1d=thar1, \
-   thar2d=thar2, st_x=st_x,ed_x=ed_x)
+   thar2d=thar2, st_x=st_x,ed_x=ed_x, clean=clean)
   hedit(ecfile,'GRQL_EC',"done",add+,del-, ver-,show-,update+)
   hedit(ecfile,'G_APREF',apref,add+,del-, ver-,show-,update+)
   hedit(ecfile,'G_FLAT',flt,add+,del-, ver-,show-,update+)

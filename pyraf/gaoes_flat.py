@@ -36,4 +36,4 @@ st_x    = sys.argv[6]
 ed_x    = sys.argv[7]
 
 iraf.set(stdimage="imt4096")
-iraf.gaoes_flat(inlist=inlist, indirec=indirec, outimg=outimg, ref_ap=ref_ap, apflag="yes", new_ap=new_ap, st_x=st_x, ed_x=ed_x, scatter="yes", normali="yes",interactive="no")
+iraf.gaoes_flat(inlist=inlist, indirec=indirec, outimg=outimg, ref_ap=ref_ap, apflag="yes", new_ap=new_ap, st_x=st_x, ed_x=ed_x, scatter="yes", normali="yes",interactive="no", imcheck="yes", ic_x1=88, ic_x2=92, ic_y1=1950, ic_y2=2100)

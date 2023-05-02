@@ -22,7 +22,8 @@ int ed_x=53  {prompt ="End pixel to extract\n"}
 
 bool ow_flat=no {prompt ="Overwrite existing sliced flat (yes/no)\n"}
 bool ow_thar=no {prompt ="Overwrite existing sliced ThAr (yes/no)\n"}
-bool clean=no {prompt ="Clean up intermediate images (yes/no)\n"}
+bool clean=yes {prompt ="Clean up intermediate images (yes/no)\n"}
+bool clncal=no {prompt ="Clean up intermediate CAL images (yes/no)\n"}
 
 begin
 #
@@ -332,16 +333,18 @@ if(clean){
         imdelete(img_ec)
      }
 
-     thar_ec=ex_thar//file_ext//i
-     if(access(thar_ec//".fits"))
-     {
-        imdelete(thar_ec)
-     }
+     if(clncal){
+       thar_ec=ex_thar//file_ext//i
+       if(access(thar_ec//".fits"))
+       {
+          imdelete(thar_ec)
+       }
 
-     flt_ec=ex_flt//file_ext//i
-     if(access(flt_ec//".fits"))
-     {
-        imdelete(flt_ec)
+       flt_ec=ex_flt//file_ext//i
+       if(access(flt_ec//".fits"))
+       {
+          imdelete(flt_ec)
+       }
      }
 
 
