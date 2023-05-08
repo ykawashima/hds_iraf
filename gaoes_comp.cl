@@ -69,7 +69,7 @@ printf("##################################\n")
 
 grql(inid,indirec=indir,batch-,inlist=INDEF,ref_ap=INDEF,\
   flatimg=INDEF,thar1d=INDEF,thar2d=INDEF,\
-  cosmicra-,scatter-,ecfw-)
+  cosmicra-,scatter-,ecfw-,mk1d-)
 output="G"//inid//"o"
 imcopy(output,thar)
 

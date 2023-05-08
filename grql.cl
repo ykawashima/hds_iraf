@@ -1,7 +1,7 @@
 ##################################################################
 # grql : Seimei GAOES-RV Quick Look Script 
 #  developed by Akito Tajitsu <akito.tajitsu@nao.ac.jp>
-#              2023.04.27 ver.0.20
+#              2023.05.08 ver.0.30
 #              2022.10.25 ver.0.01
 ###################################################################
 procedure grql(inid)
@@ -26,6 +26,7 @@ procedure grql(inid)
  bool   scatter=no {prompt = 'Scattered Light Subtraction?'}
  bool   ecfw=no {prompt = 'Extract / Flat-fielding / Wavelength calib.?'}
  bool   getcnt=no  {prompt = 'Measure spectrum count?'}
+ bool   mk1d=no  {prompt = 'Make order combined 1d spectrum?'}
  bool   splot=no    {prompt = 'Splot Spectrum?\n\n### Cosmic-Ray Rejection. ###'}
 
 # Parameters for overscan
@@ -47,11 +48,16 @@ procedure grql(inid)
  bool   sc_inter=yes {prompt = 'Run apscatter interactively?\n\n### Get Spectrum Count. ###'}
 
 # Parameters for Get Spectrum Count
- int ge_line=1 {prompt = 'Order line to get count\n'}
+ int ge_line=1 {prompt = 'Order line to get count'}
  int ge_stx=1900  {prompt ="Start pixel to get count"}
  int ge_edx=2100  {prompt ="End pixel to get count"}
  real ge_low=0.5  {prompt ="Low rejection in sigma of fit"}
- real ge_high=1.5   {prompt ="High rejection in sigma of fit\n\n### Splot ###"}
+ real ge_high=1.5   {prompt ="High rejection in sigma of fit\n\n### Make 1D spectrum ###"}
+
+ string m1_blaze {prompt = 'Blaze Function'}
+ string m1_mask {prompt = 'Mask Image'}
+ int m1_stx=2 {prompt = 'Start X for trimming'}
+ int m1_edx=4096 {prompt = 'Endt X for trimming\n\n### Splot ###'}
  
 #splot
  int sp_line=1 {prompt = 'Splot image line/aperture to plot\n'}
@@ -75,7 +81,7 @@ string crfile, osfile, scfile, ecfile,nextin, crinfile, batch_id[2000]
 
 string temp1, temp2, temp3
 int mean_cnt, max_cnt, cont_cnt
-string cnt_out
+string cnt_out, m1file
 
 apref=ref_ap
 flt=flatimg
@@ -335,6 +341,9 @@ if (getcnt && ap_done){
    imstat(image=temp3, field='max', format-) |scan(max_cnt)
    cnt_out="G"//input_id//"_cnt"
    cont_cnt=(max_cnt+mean_cnt)/2
+   if(access(cnt_out)){
+     delete(cnt_out)
+  }
    print(cont_cnt, > cnt_out)
    imdelete(temp1)
    imdelete(temp2)
@@ -344,16 +353,32 @@ if (getcnt && ap_done){
    printf("\n")
 }
 
-
-if(batch){
-  batch_i=batch_i+1
+if(mk1d){
+  flag=flag+"_1d"	
+  m1file=(output+flag)
+  gaoes_mk1d(nextin,m1file,blaze=m1_blaze,mask=m1_mask,st_x=m1_stx,ed_x=m1_edx)
+  if(batch){
+   batch_i=batch_i+1
+  }
+  else{
+    if (splot && ap_done){
+        splot (images=output//flag,line=1,band=1)
+    }
+    do_flag=no
+    bye
+  }
 }
 else{
-  if (splot && ap_done){
-      splot (images=output//flag,line=sp_line,band=1)
+  if(batch){
+   batch_i=batch_i+1
   }
-  do_flag=no
-  bye
+  else{
+    if (splot && ap_done){
+       splot (images=output//flag,line=sp_line,band=1)
+    }
+    do_flag=no
+    bye
+  }
 }
 }
 

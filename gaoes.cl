@@ -41,6 +41,9 @@ task	gaoes_linear 	        ="gaoeshome$gaoes_linear.cl"
 task	grql 	        	="gaoeshome$grql.cl"
 task	gaoes_linstab 	        ="gaoeshome$gaoes_linstab.cl"
 task	gaoes_linstat 	        ="gaoeshome$gaoes_linstat.cl"
+task	gaoes_mk1d 	        ="gaoeshome$gaoes_mk1d.cl"
+task	gaoes_mkblaze 	        ="gaoeshome$gaoes_mkblaze.cl"
+task	gaoes_mkmask 	        ="gaoeshome$gaoes_mkmask.cl"
 
 beep
 print ("  ***************************************************************")
