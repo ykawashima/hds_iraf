@@ -97,6 +97,9 @@ imgets(inimg,'EXPTIME')
 expt=int(imgets.value)
 
 hedit(outimg,"EXPTIME",expt,del-,add-,ver-,show+,update+)
+hedit(outimg,'G_MASK', msk,add+,del-, ver-,show-,update+)
+hedit(outimg,'G_BLAZE',blz,add+,del-, ver-,show-,update+)
+
 printf("## Created : %s   ... done\n",outimg)
 
 bye

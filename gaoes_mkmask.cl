@@ -1,7 +1,7 @@
 ##################################################################
-# Subaru HDS Bad Pixel Auto/Manual imreplace 
-#  developed by Akito Tajitsu <tajitsu@subaru.naoj.org>
-#              2011.09.30 ver.1.00
+# Seimei GAOES-RV Bad Pixel imreplace and Create Mask image
+#  developed by Akito Tajitsu <akito.tajitsu@nao.ac.jp>
+#              2023.05.09 ver.0.10
 ###################################################################
 procedure gaoes_mkmask(inimage, mask)
 #
@@ -14,7 +14,7 @@ begin
 string 	inimg, outimg
 int i, nord, npix
 bool ans
-int i1, i2, ans_num
+int i1, i2, ans_num, tmp_g
 string tempix, ptmp1, ptmp2
 real w1, w2
 string mskimg, msk_temp, msk_temp1, msk_temp2
@@ -85,7 +85,7 @@ for(i=1;i<=nord;i=i+1){
       prow(outimg, row=i,wcs="logical")
       printf("\n>>> Move Cursor to the START point to be cut!\n")
       printf(">>> then, HIT ANY KEY!!\n")
-      = fscan (gcur, x,y)
+      tmp_g = fscan (gcur, x,y)
 
         ans_num=int(x)
         if(ans_num<1){
@@ -97,7 +97,7 @@ for(i=1;i<=nord;i=i+1){
     
       printf("\n>>> Move Cursor to the END point to be cut!\n")
       printf(">>> then, HIT ANY KEY!!\n")
-      = fscan (gcur, x,y)
+      tmp_g = fscan (gcur, x,y)
 
         ans_num=int(x)
 	if(ans_num>npix){
@@ -119,6 +119,7 @@ for(i=1;i<=nord;i=i+1){
 }
 
 printf("#####  Masked file : %s  has been created!\n",outimg)
+printf("#####  Mask file : %s  has been created!\n",createmask)
 
 #endofp:
 

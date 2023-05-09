@@ -1,7 +1,7 @@
 ##################################################################
 # grql : Seimei GAOES-RV Quick Look Script 
 #  developed by Akito Tajitsu <akito.tajitsu@nao.ac.jp>
-#              2023.05.08 ver.0.30
+#              2023.05.09 ver.0.40
 #              2022.10.25 ver.0.01
 ###################################################################
 procedure grql(inid)
@@ -66,7 +66,7 @@ procedure grql(inid)
 # Extract / Flat fielding / Wavecalib
 
 begin
-string version="0.20 (04-27-2023)"
+string version="0.40 (05-09-2023)"
 string input_id, tmp_inid
 string apref, flt, thar1, thar2
 

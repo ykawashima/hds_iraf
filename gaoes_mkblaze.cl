@@ -1,6 +1,7 @@
 ##################################################################
 # gaoes_mkblaze : Seimei GAOES-RV Make Blaze Function
 #  developed by Akito Tajitsu <akito.tajitsu@nao.ac.jp>
+#              2023.05.09 ver.0.10
 ###################################################################
 procedure gaoes_mkblaze(inec,outblz)
 #
@@ -31,9 +32,9 @@ if(access(inimg//suf_b//suf_c//".fits")){
 
 sarith(inimg, "*", mask, inimg//suf_b)
 
-continuum(inimg//suf_b,inimg//suf_b//suf_c,lines="*",bands=1,type="ratio",function="spline3",order=15,low_rej=2,high_rej=0,niterate=5,ask="YES")
+continuum(inimg//suf_b,inimg//suf_b//suf_c,lines="*",bands=1,type="ratio",function="spline3",order=15,low_rej=2,high_rej=0,niterate=0,ask="YES")
 
-sarith(inimg, "/", inimg//suf_c, outimg)
+sarith(inimg//suf_b, "/", inimg//suf_b//suf_c, outimg)
 printf("### Create a new Blaze function : \"%s\" \n", outimg)
 
 bye
