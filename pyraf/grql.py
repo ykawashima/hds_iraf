@@ -4,8 +4,8 @@ import os
 from pyraf import iraf
 
 
-if len(sys.argv) != 13:
-  print(" [usage] python3 grql.py inid indirec ref_ap flatimg thar1d thar2d st_x ed_x ge_line ge_stx ge_edx sp_line")
+if len(sys.argv) != 16:
+  print(" [usage] python3 grql.py inid indirec ref_ap flatimg thar1d thar2d st_x ed_x ge_line ge_stx ge_edx make1d blaze mask sp_line")
   print("    inid    :  8 digit frame number")
   print("    indirec :  directory of RAW data")
   print("    ref_ap  :  Aperture reference image")
@@ -17,6 +17,9 @@ if len(sys.argv) != 13:
   print("    ge_line :  Spectrum line to get count")
   print("    ge_stx  :  Start pixel to get count")
   print("    ge_edx  :  End pixel to get count")
+  print("    make1d  :  Make 1D spectrum (yes/no)")
+  print("    blaze   :  Blaze function")
+  print("    mask    :  Mas image")
   print("    sp_line :  Spectrum line to plot in splot")
   sys.exit()
 
@@ -32,12 +35,19 @@ ed_x    = sys.argv[8]
 ge_line = sys.argv[9]
 ge_stx  = sys.argv[10]
 ge_edx  = sys.argv[11]
-sp_line = sys.argv[12]
+make1d  = sys.argv[12]
+blaze   = sys.argv[13]
+mask    = sys.argv[14]
+sp_line = sys.argv[15]
 
 iraf.gaoes()
 
 #inid = sys.argv[1]
 iraf.set(stdimage="imt4096")
-iraf.grql(inid=inid, indirec=indirec, batch="no", interactive="no", ref_ap=ref_ap, flatimg=flatimg, thar1d=thar1d, thar2d=thar2d, st_x=st_x, ed_x=ed_x, cosmicr="yes", scatter="yes", ecfw="yes", getcnt="yes", splot="yes", cr_proc="wacosm", cr_wbas=2000., sc_inte="no", ge_line=ge_line, ge_stx=ge_stx, ge_edx=ge_edx, ge_low=0.5, ge_high=1.5, sp_line=sp_line, clean="yes")
+
+if make1d == "yes":
+  iraf.grql(inid=inid, indirec=indirec, batch="no", interactive="no", ref_ap=ref_ap, flatimg=flatimg, thar1d=thar1d, thar2d=thar2d, st_x=st_x, ed_x=ed_x, cosmicr="yes", scatter="yes", ecfw="yes", getcnt="yes", splot="yes", cr_proc="wacosm", cr_wbas=2000., sc_inte="no", ge_line=ge_line, ge_stx=ge_stx, ge_edx=ge_edx, ge_low=0.5, ge_high=1.5, sp_line=sp_line, clean="yes", mk1d="yes", m1_blaze=blaze, m1_mask=mask, m1_stx=60, m1_edx=4120)
+else:
+  iraf.grql(inid=inid, indirec=indirec, batch="no", interactive="no", ref_ap=ref_ap, flatimg=flatimg, thar1d=thar1d, thar2d=thar2d, st_x=st_x, ed_x=ed_x, cosmicr="yes", scatter="yes", ecfw="yes", getcnt="yes", splot="yes", cr_proc="wacosm", cr_wbas=2000., sc_inte="no", ge_line=ge_line, ge_stx=ge_stx, ge_edx=ge_edx, ge_low=0.5, ge_high=1.5, sp_line=sp_line, clean="yes", mk1d="no", m1_blaze=blaze, m1_mask=mask, m1_stx=60, m1_edx=4120)
 
     

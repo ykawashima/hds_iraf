@@ -48,11 +48,11 @@ procedure grql(inid)
  bool   sc_inter=yes {prompt = 'Run apscatter interactively?\n\n### Get Spectrum Count. ###'}
 
 # Parameters for Get Spectrum Count
- int ge_line=1 {prompt = 'Order line to get count'}
- int ge_stx=1900  {prompt ="Start pixel to get count"}
- int ge_edx=2100  {prompt ="End pixel to get count"}
- real ge_low=0.5  {prompt ="Low rejection in sigma of fit"}
- real ge_high=1.5   {prompt ="High rejection in sigma of fit\n\n### Make 1D spectrum ###"}
+ int ge_line=2 {prompt = 'Order line to get count'}
+ int ge_stx=2150  {prompt ="Start pixel to get count"}
+ int ge_edx=2400  {prompt ="End pixel to get count"}
+ real ge_low=1.0  {prompt ="Low rejection in sigma of fit"}
+ real ge_high=0.0   {prompt ="High rejection in sigma of fit\n\n### Make 1D spectrum ###"}
 
  string m1_blaze {prompt = 'Blaze Function'}
  string m1_mask {prompt = 'Mask Image'}
@@ -331,26 +331,7 @@ printf("##############################################################\n")
 #endofp:
 
 if (getcnt && ap_done){
-   temp1=mktemp("tmp_getcnt")
-   temp2=mktemp("tmp_getcnt_c")
-   temp3=mktemp("tmp_getcnt_cp")
-   scopy(nextin//"[*,"//ge_line//"]",temp1)
-   continuum(temp1,temp2,bands=1,type="fit",functio="spline3",order=6,high_rej=ge_high,low_rej=ge_low,ask="no")
-   scopy(temp2//"["//ge_stx//":"//ge_edx//"]",temp3)
-   imstat(image=temp3, field='mean', format-) |scan(mean_cnt)
-   imstat(image=temp3, field='max', format-) |scan(max_cnt)
-   cnt_out="G"//input_id//"_cnt"
-   cont_cnt=(max_cnt+mean_cnt)/2
-   if(access(cnt_out)){
-     delete(cnt_out)
-  }
-   print(cont_cnt, > cnt_out)
-   imdelete(temp1)
-   imdelete(temp2)
-   imdelete(temp3)
-   printf("\n")
-   printf("*** Continuum Count is %de- at order %d. ***\n",cont_cnt,sp_line)
-   printf("\n")
+  getcount(nextin,"G"//input_id//"_cnt",ge_line=ge_line,ge_stx=ge_stx,ge_edx=ge_edx,ge_high=ge_high,ge_low=ge_low,ask="no")
 }
 
 if(mk1d){
