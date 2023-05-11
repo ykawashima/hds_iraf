@@ -64,6 +64,7 @@ if((access(outimage))||access(outimage//".fits")){
        while(scan(d_ans)!=1) {}
        if(d_ans){
           imdelete(outimage)
+	  if(access(outimage//".fits")) delete(outimage//".fits")
        }
        else{
           printf("!!! Please remove exsiting file !!! ABORT !!!\n")
@@ -88,6 +89,7 @@ for(i=low;i<upp;i=i+1)
         if(ow_flat){
 	  flag_go=yes
           imdelete(ex_flt//file_ext//i)
+          if(access(ex_flt//file_ext//i//".fits")) delete(ex_flt//file_ext//i//",fits")
 	}
 	else{
 	  flag_go=no
@@ -145,6 +147,7 @@ for(i=low;i<upp;i=i+1)
         if(ow_thar){
 	  flag_go=yes
           imdelete(thar_ec)
+	  if(access(thar_ec//".fits")) delete(thar_ec//".fits")
 	}
 	else{
 	  flag_go=no
@@ -278,6 +281,7 @@ for(i=low;i<upp;i=i+1)
      if(access(img_ec//".fits"))
      {
           imdelete(img_ec)
+	  if(access(img_ec//".fits")) delete(img_ec//".fits")
      }
      print("apall")
      apall(input=ex_img,output=img_ec,\
@@ -296,6 +300,7 @@ for(i=low;i<upp;i=i+1)
      if(access(img_ecf//".fits"))
      {
           imdelete(img_ecf)
+	  if(access(img_ecf//".fits")) delete(img_ecf//".fits")
      }
      sarith(tempspec1,"*",fmean[i-low+1],img_ecf)
      imdelete(tempspec1)
@@ -308,6 +313,7 @@ for(i=low;i<upp;i=i+1)
      if(access(img_ecfw//".fits"))
      {
           imdelete(img_ecfw)
+	  if(access(img_ecfw//".fits")) delete(img_ecfw//".fits")
      }
      dispcor(input=img_ecf,output=img_ecfw, log-)
      printf("%s\n",img_ecfw,>>templist)
@@ -331,6 +337,7 @@ if(clean){
      if(access(img_ec//".fits"))
      {
         imdelete(img_ec)
+	if(access(img_ec//".fits")) delete(img_ec//".fits")
      }
 
      if(clncal){
@@ -338,12 +345,14 @@ if(clean){
        if(access(thar_ec//".fits"))
        {
           imdelete(thar_ec)
+	  if(access(thar_ec//".fits")) delete(thar_ec//".fits")
        }
 
        flt_ec=ex_flt//file_ext//i
        if(access(flt_ec//".fits"))
        {
           imdelete(flt_ec)
+	  if(access(flt_ec//".fits")) delete(flt_ec//".fits")
        }
      }
 
@@ -354,6 +363,7 @@ if(clean){
      if(access(img_ecf//".fits"))
      {
         imdelete(img_ecf)
+	if(access(img_ecf//".fits")) delete(img_ecf//".fits")
      }
 
      file_ext="_ecfw"
@@ -362,6 +372,7 @@ if(clean){
      if(access(img_ecfw//".fits"))
      {
         imdelete(img_ecfw)
+	if(access(img_ecfw//".fits")) delete(img_ecfw//".fits")
      }
   }
 }

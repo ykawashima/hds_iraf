@@ -158,6 +158,7 @@ nextin=input
      printf("*** OverScanned file \"%s\" already exsits!!\n",osfile)
      printf("*** Automatcally Rmoving \"%s\" ...\n",osfile)
      imdelete(osfile)
+     if(access(osfile//".fits")) delete(osfile//".fits")
   }
 
   printf(" output overscaned data= %s\n", osfile)
@@ -187,6 +188,7 @@ if (cosmicra){
      printf("*** Cosmic Ray Rjected file \"%s\" already exsits!!\n",crfile)
      printf("*** Automatcally Rmoving \"%s\" ...\n",crfile)
      imdelete(crfile)
+     if(access(crfile//".fits")) delete(crfile//".fits")
    }
 
    crinfile=nextin
@@ -200,6 +202,7 @@ if (cosmicra){
        printf("### If failed, load STSDAS then retry ###\n")
        if((access(crinfile//"_badpix"))||access(crinfile//"_badpix"//".fits")){
           imdelete(crinfile//"_badpix")
+          if(access(crinfile//"_badpix"//".fits")) delete(crinfile//"_badpix"//".fits")
        }
        lacos_spec(crinfile,crfile,crinfile//"_badpix",
          gain=ls_gain,readn=ls_readn,xorder=ls_xorder,yorder=ls_yorder,
@@ -274,6 +277,7 @@ if (scatter){
      printf("*** Scattered Light Subtracted file \"%s\" already exsits!!\n",scfile)
      printf("*** Automatcally Rmoving \"%s\" ...\n",scfile)
      imdelete(scfile)
+     if(access(scfile//".fits")) delete(scfile//".fits")
   }
 #
 
@@ -303,6 +307,7 @@ if(ecfw){
      printf("*** Extracted / Flat Fielded / Wavelength calibrated file \"%s\" already exsits!!\n",ecfile)
      printf("*** Automatcally Rmoving \"%s\" ...\n",ecfile)
      imdelete(ecfile)
+     if(access(ecfile//".fits")) delete(ecfile//".fits")
   }
 
   printf("# Extraction / Flat fielding / Wavelength calibration is now processing...")
