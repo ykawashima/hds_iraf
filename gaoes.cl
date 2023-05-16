@@ -56,7 +56,7 @@ print ("  ** Check the latest package via                              **")
 print ("  **       git clone https://github.com/chimari/hds_iraf       **")
 print ("  **                                                           **")
 print ("  **     This package is developed by Akito Tajitsu (NAOJ)     **")
-print ("  **                               last update : 2023/03/27    **")
+print ("  **                               last update : 2023/05/11    **")
 print ("  ***************************************************************")
 print ("  ***************************************************************\n")
 
