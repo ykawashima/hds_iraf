@@ -45,6 +45,8 @@ task	gaoes_mk1d 	        ="gaoeshome$gaoes_mk1d.cl"
 task	gaoes_mkblaze 	        ="gaoeshome$gaoes_mkblaze.cl"
 task	gaoes_mkmask 	        ="gaoeshome$gaoes_mkmask.cl"
 task	getcount 	        ="gaoeshome$getcount.cl"
+task	rvgaoes 	       	="gaoeshome$rvgaoes.cl"
+
 
 beep
 print ("  ***************************************************************")

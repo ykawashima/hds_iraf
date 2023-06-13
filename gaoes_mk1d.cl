@@ -9,8 +9,8 @@ file	out1d   {prompt= "Output 1D Spectrum"}
 file    blaze   {prompt= "Blaze Function\n"}
 file    mask    {prompt= "Mask Image\n"}
 
-int     st_x=1    {prompt= "Start X"}
-int     ed_x=4096    {prompt= "End X\n"}
+int     st_x=70    {prompt= "Start X"}
+int     ed_x=4100    {prompt= "End X\n"}
 
 #
 

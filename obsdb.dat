@@ -5,3 +5,11 @@ observatory = "subaru"
         altitude = 4163
         timzone = 10
 
+observatory = "seimei"
+        name = "SEIMEI Telescope, Kyoto University"
+        longitude = -133.5968
+        latitude = 34.5768
+        altitude = 320
+        timzone = -9
+
+
