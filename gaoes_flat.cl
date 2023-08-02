@@ -216,7 +216,8 @@ if(apflag){
     resize+, interac-)
 
   apall(apnew,ref=apref,output=apnew//".ec",resize-,recenter-,trace-,\
-      find-,edit=interactive, extract+, review=interactive, mode="ql")
+      interac-, find-,edit=interactive, extract+, review=interactive, \
+      mode="ql")
 
   apref=apnew
 }
