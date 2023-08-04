@@ -1,7 +1,8 @@
 # Procedure for making flat frame for GAOES-RV
 #
 # copyright : A.Tajitsu (2022/10/27)
-# !!!  It's important to use apall with                      !!!
+# !!!  It's important tlockfile o use apall with                      !!!
+# !!!        lockfilet=(Lockfileulimit=(pix+1) ylebel=INDEF"    !!!
 # !!!          "llimit=(pix) ulimit=(pix+1) ylebel=INDEF"    !!!
 # !!!    to extract 1-pixel along a reference aperture.      !!!
 #
@@ -216,8 +217,8 @@ if(apflag){
     resize+, interac-)
 
   apall(apnew,ref=apref,output=apnew//".ec",resize-,recenter-,trace-,\
-      interac-, find-,edit=interactive, extract+, review=interactive, \
-      mode="ql")
+      interac=interactive, find-,edit=interactive, extract+, \
+      review=interactive, mode="ql")
 
   apref=apnew
 }
