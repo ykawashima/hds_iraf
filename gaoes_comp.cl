@@ -99,7 +99,8 @@ printf("##################################\n")
 printf("# [4/4] EcIdentify\n")
 printf("##################################\n")
 
-ecidentify(images=thar//".center")
+ecidentify(images=thar//".center",maxfeat=1000,\
+      match=1., zwidth=10.)
 
 printf("\n")
 printf("##############################################################\n")
