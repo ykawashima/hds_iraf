@@ -12,19 +12,17 @@ file    mask    {prompt= "Mask Image\n"}
 int     st_x=70    {prompt= "Start X"}
 int     ed_x=4100    {prompt= "End X\n"}
 
-int     blmx_w1=5180    {prompt= "Start Wavelength for Blaze Max fit"}
-int     blmx_w2=5910    {prompt= "End Wavelength for Blaze Max fit\n"}
+int     blmx_st=2250    {prompt= "Start X for Max count in Blaze"}
+int     blmx_ed=2400    {prompt= "End X for Max count in Blaze\n"}
 
 #
 
 begin
-string 	inimg, outimg, blz, msk, suf_b, suf_s, suf_n, suf_c, suf_t,\
-        adjtmp, vrtmp
+string 	inimg, outimg, blz, msk, suf_b, suf_s, suf_n, suf_t, adjtmp, vrtmp
 bool  trm, aexp
-int x1, x2, bw1, bw2
+int x1, x2, bx1, bx2
 int expt, bexpt
-real efact
-string temp1
+real efact, blmx
 
 
 inimg=inec
@@ -36,13 +34,12 @@ msk=mask
 x1=st_x
 x2=ed_x
 
-bw1=blmx_w1
-bw2=blmx_w2
+bx1=blmx_st
+bx2=blmx_ed
 
 suf_t="_t"
 suf_b="_b"
 suf_s="_sum"
-suf_c="_c"
 suf_n="_n"
 
 if(access(inimg//suf_t//".fits")){ 
@@ -61,6 +58,9 @@ if(access(blz//suf_t)){
 printf("##### X Trimming #####\n")
 scopy(inimg//"["//x1//":"//x2//",*]", inimg//suf_t)
 scopy(blz//"["//x1//":"//x2//",*]", blz//suf_t)
+
+imstat(blz//"["//bx1//":"//bx2//",*],\
+	field='mean', format-,) |scan(blmx)
 
 
 printf("##### Removal Bad Pix #####\n")
@@ -101,27 +101,15 @@ if(access(blz//suf_b//suf_s)){
 scombine(blz//suf_b, blz//suf_b//suf_s,combine="sum",
          group="images",reject="none")
 
-if(access(blz//suf_b//suf_s//suf_c//".fits")){ 
-  imdelete(blz//suf_b//suf_s//suf_c)
-}
-if(access(blz//suf_b//suf_s//suf_c)){ 
-  delete(blz//suf_b//suf_s//suf_c)
-}
-continuum(blz//suf_b//suf_s,blz//suf_b//suf_s//suf_c,type='fit',\
-	function='spline3',order=1,interac-,sample=bw1//':'//bw2,\
-	ask='YES')
-
 if(access(blz//suf_b//suf_s//suf_n//".fits")){ 
   imdelete(blz//suf_b//suf_s//suf_n)
 }
 if(access(blz//suf_b//suf_s//suf_n)){ 
   delete(blz//suf_b//suf_s//suf_n)
 }
-sarith(blz//suf_b//suf_s,"/",blz//suf_b//suf_s//suf_c,\
-	blz//suf_b//suf_s//suf_n)
+sarith(blz//suf_b//suf_s,"/",blmx,blz//suf_b//suf_s//suf_n)
 
 printf("##### Make 1D Spectrum #####\n")
-
 sarith(inimg//suf_b//suf_s,"/",blz//suf_b//suf_s//suf_n,outimg)
 imgets(inimg,'EXPTIME')
 expt=int(imgets.value)

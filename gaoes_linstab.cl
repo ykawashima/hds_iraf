@@ -153,13 +153,13 @@ if(access(lampstab)){
 for(j=1;j<jmax;j=j+1){
 	x=center[j]
 	imstat(ave2//'['//x-dp/2//':'//x+dp/2//','//y-dp//':'//y+dp//']',\
-	    field='mean', format-,) |scan(ave_cnt)
+	    field='mean', format-) |scan(ave_cnt)
 
         printf(" %4d  %9.2f ",x,ave_cnt)
 
         for(i=1;i<i2;i=i+1){
 	   imstat(img2[i]//'['//x-dp/2//':'//x+dp/2//','//y-dp//':'//y+dp//']',\
-	   field='mean', format-,) |scan(cnt[i])
+	   field='mean', format-) |scan(cnt[i])
 	   resi[i]=(cnt[i]-ave_cnt)/ave_cnt*100
            if((resi[i]<-bp) || (resi[i]>bp)){
  	     printf("%5.2f*",resi[i])

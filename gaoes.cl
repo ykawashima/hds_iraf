@@ -1,6 +1,6 @@
 ##################################################################
 # Seimei GAOES-RV Reduction Package (alpha version)
-#  developed by A.Tajitsu                     2023.03.27
+#  developed by A.Tajitsu                     2024.09.25
 ###################################################################
 images
 tv
@@ -58,7 +58,7 @@ print ("  ** Check the latest package via                              **")
 print ("  **       git clone https://github.com/chimari/hds_iraf       **")
 print ("  **                                                           **")
 print ("  **     This package is developed by Akito Tajitsu (NAOJ)     **")
-print ("  **                               last update : 2023/05/11    **")
+print ("  **                               last update : 2024/09/25    **")
 print ("  ***************************************************************")
 print ("  ***************************************************************\n")
 
