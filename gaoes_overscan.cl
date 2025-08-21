@@ -180,7 +180,12 @@ begin
 	print(tmp1, >> tmp0)
 	print(tmp2, >> tmp0)
 	if(newiraf){	
-	  imjoin(input="@"//tmp0, output=outimg, joindim=1, outtype="double")
+	  if(subver==18){
+	    imjoin(input="@"//tmp0, output=outimg, join_dimension=1, pixtype="double")
+	  }
+	  else{
+	    imjoin(input="@"//tmp0, output=outimg, joindim=1, outtype="double")
+	  }
 	}
 	else{
 	  imjoin(input="@"//tmp0, output=outimg, join_dim=1, ver-)
